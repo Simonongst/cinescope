@@ -15,5 +15,6 @@ const getPopularMovies = async () => {
     return [];
   }
 };
+cons
 
 export default getPopularMovies;

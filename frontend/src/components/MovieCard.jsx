@@ -20,7 +20,7 @@ const MovieCard = () => {
     loadPopularMovies();
   }, []);
 
-  if (loading) return <p>Loading CineScope magic...</p>;
+  if (loading) return <p>Loading CineScope movies...</p>;
   if (error) return <p>{error}</p>;
 
   return (
@@ -28,6 +28,8 @@ const MovieCard = () => {
       {movies.map((movie) => (
         <div key={movie.id}>
           <h3>{movie.title}</h3>
+          <h3>{movie.release_date}</h3>
+          <p>{movie.overview}</p>
           <img
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
             alt={movie.title}

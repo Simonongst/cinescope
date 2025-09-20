@@ -23,17 +23,28 @@ const MovieCard = () => {
   if (loading) return <p>Loading CineScope movies...</p>;
   if (error) return <p>{error}</p>;
 
+  function onFavouriteClick() {
+    alert('clicked')
+  }
+
   return (
-    <div>
+    <div className="movie-card">
       {movies.map((movie) => (
-        <div key={movie.id}>
-          <h3>{movie.title}</h3>
-          <h3>{movie.release_date}</h3>
-          <p>{movie.overview}</p>
+        <div className="movie-poster" key={movie.id}>
           <img
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
             alt={movie.title}
           />
+          <div className="movie-overlay">
+            <button className="favourite-btn" onClick={onFavouriteClick}>
+              ♥︎
+            </button>
+          </div>
+          <div className="movie-info">
+            <h3>{movie.title}</h3>
+            <h3>{movie.release_date}</h3>
+            <p>{movie.overview}</p>
+          </div>
         </div>
       ))}
     </div>

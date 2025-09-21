@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import getPopularMovies from "../services/cinescopeService";
 
-const MovieCard = () => {
+const MovieCard = ({searchQuery}) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,7 +29,7 @@ const MovieCard = () => {
 
   return (
     <div className="movie-card">
-      {movies.map((movie) => (
+      {movies.map((movie) => movie.title.toLowerCase().startsWith(searchQuery) && (
         <div className="movie-poster" key={movie.id}>
           <img
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}

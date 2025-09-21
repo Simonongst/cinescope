@@ -1,6 +1,7 @@
 import './App.css'
-import MovieCard from './components/MovieCard';
 import NavBar from './components/NavBar';
+import Home from './pages/home';
+import Favourites from './pages/Favourites';
 import {Routes, Route} from 'react-router-dom'
 
 function App() {
@@ -9,7 +10,8 @@ function App() {
     <>
     <NavBar />
     <Routes>
-      <Route path='/' element={<MovieCard />} />
+      <Route path='/' element={<Home />} />
+      <Route path='/favourites' element={<Favourites />} />
     </Routes>
     </>
   )

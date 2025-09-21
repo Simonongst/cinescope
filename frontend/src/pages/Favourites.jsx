@@ -1,7 +1,9 @@
 
 const Favourites = () => {
   return (
-    <div>Favourites</div>
+    <div className="favourites-empty">
+        Favourites
+    </div>
   )
 }
 

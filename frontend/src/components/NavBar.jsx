@@ -5,7 +5,7 @@ function NavBar() {
     <>
     <ul>
         <li><Link to='/'>Home</Link></li>
-        <li><Link to='/favourite'>Favourite</Link></li>
+        <li><Link to='/favourites'>Favourite</Link></li>
     </ul>
     </>
   )

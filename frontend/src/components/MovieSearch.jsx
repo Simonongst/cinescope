@@ -1,16 +1,17 @@
+import styles from '../css/MovieSearch.module.css';
 
 const MovieSearch = ({handleSearch, searchQuery, setSearchQuery}) => {
   return (
     <div>
-        <form onSubmit={handleSearch} className="search-form">
+        <form onSubmit={handleSearch} className={styles.searchForm}>
             <input 
                 type="text"
                 placeholder="Search for movies..."
-                className="search-input"
+                className={styles.searchInput}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button type="submit" className="search-button">Search</button>
+            <button type="submit" className={styles.searchButton}>Search</button>
         </form>
     </div>
   )

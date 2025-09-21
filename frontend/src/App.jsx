@@ -1,4 +1,4 @@
-import './App.css'
+import styles from './App.module.css'
 import NavBar from './components/NavBar';
 import Home from './pages/home';
 import Favourites from './pages/Favourites';
@@ -7,13 +7,15 @@ import {Routes, Route} from 'react-router-dom'
 function App() {
 
   return (
-    <>
-    <NavBar />
-    <Routes>
-      <Route path='/' element={<Home />} />
-      <Route path='/favourites' element={<Favourites />} />
-    </Routes>
-    </>
+    <div>
+      <NavBar />
+      <main className={styles.mainContent}>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/favourites' element={<Favourites />} />
+        </Routes>
+      </main>
+    </div>
   )
 }
 

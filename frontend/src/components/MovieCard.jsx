@@ -24,9 +24,30 @@ const MovieCard = ({ searchQuery }) => {
   if (loading) return <p>Loading CineScope movies...</p>;
   if (error) return <p>{error}</p>;
 
-  function onFavouriteClick() {
-    alert("clicked");
-  }
+function onFavouriteClick(movie) {
+  fetch("http://localhost:3000/api/favourites", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      movieId: movie.id,
+      title: movie.title,
+      posterUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+      releaseDate: movie.release_date,
+      overview: movie.overview,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("Saved to Airtable:", data);
+      alert(`Added "${movie.title}" to favourites!`);
+    })
+    .catch((err) => {
+      console.error("Error saving favourite:", err);
+      alert("Failed to save favourite.");
+    });
+}
 
   return (
     <div className={styles.moviesGrid}>
@@ -42,7 +63,7 @@ const MovieCard = ({ searchQuery }) => {
                 <div className={styles.movieOverlay}>
                   <button
                     className={styles.favouriteBtn}
-                    onClick={onFavouriteClick}
+                      onClick={() => onFavouriteClick(movie)}
                   >
                     ♥︎
                   </button>

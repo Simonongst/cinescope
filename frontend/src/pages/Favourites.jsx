@@ -32,6 +32,26 @@ const Favourites = () => {
     );
   }
 
+  const handleDelete = async (movieId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/favourites/${movieId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const result = await response.json();
+
+      if (result.success) {
+        setFavourites(favourites.filter((fav) => fav["Movie ID"] !== movieId));
+      } else {
+        console.error("Failed to delete favourite:", result.error);
+      }
+    } catch (err) {
+      console.error("Error deleting favourite:", err);
+    }
+  };
+
   return (
     <div className={styles.favourites}>
       <h2>Your Favourite Movies</h2>
@@ -48,7 +68,12 @@ const Favourites = () => {
                   alt={fields["Movie Title"] || "Untitled"}
                 />
                 <div className={styles.movieOverlay}>
-                  <button className={styles.favouriteBtn}>♥︎</button>
+                  <button
+                    className={styles.favouriteBtn}
+                    onClick={() => handleDelete(fields["Movie ID"])}
+                  >
+                    ⛌
+                  </button>
                 </div>
               </div>
               <div className={styles.movieInfo}>

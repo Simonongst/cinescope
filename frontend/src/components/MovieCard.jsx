@@ -6,6 +6,7 @@ const MovieCard = ({ searchQuery }) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [favouritedIds, setFavouritedIds] = useState([]);
 
   useEffect(() => {
     const loadPopularMovies = async () => {
@@ -21,33 +22,65 @@ const MovieCard = ({ searchQuery }) => {
     loadPopularMovies();
   }, []);
 
+  useEffect(() => {
+    const fetchFavourites = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/favourites");
+        const data = await response.json();
+        const ids = data.map((fav) => fav["Movie ID"]);
+        setFavouritedIds(ids);
+      } catch (err) {
+        console.error("Error loading favourites:", err);
+      }
+    };
+
+    fetchFavourites();
+  }, []);
+
   if (loading) return <p>Loading CineScope movies...</p>;
   if (error) return <p>{error}</p>;
 
-function onFavouriteClick(movie) {
-  fetch("http://localhost:3000/api/favourites", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      movieId: movie.id,
-      title: movie.title,
-      posterUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-      releaseDate: movie.release_date,
-      overview: movie.overview,
-    }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("Saved to Airtable:", data);
-      alert(`Added "${movie.title}" to favourites!`);
-    })
-    .catch((err) => {
-      console.error("Error saving favourite:", err);
-      alert("Failed to save favourite.");
-    });
-}
+  function onFavouriteClick(movie) {
+    const isFavourited = favouritedIds.includes(movie.id);
+
+    if (isFavourited) {
+      fetch(`http://localhost:3000/api/favourites/${movie.id}`, {
+        method: "DELETE",
+      })
+        .then((res) => res.json())
+        .then(() => {
+          setFavouritedIds(favouritedIds.filter((id) => id !== movie.id));
+          alert(`Removed "${movie.title}" from favourites.`);
+        })
+        .catch((err) => {
+          console.error("Error removing favourite:", err);
+          alert("Failed to remove favourite.");
+        });
+    } else {
+      fetch("http://localhost:3000/api/favourites", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          movieId: movie.id,
+          title: movie.title,
+          posterUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+          releaseDate: movie.release_date,
+          overview: movie.overview,
+        }),
+      })
+        .then((res) => res.json())
+        .then(() => {
+          setFavouritedIds([...favouritedIds, movie.id]);
+          alert(`Added "${movie.title}" to favourites!`);
+        })
+        .catch((err) => {
+          console.error("Error saving favourite:", err);
+          alert("Failed to save favourite.");
+        });
+    }
+  }
 
   return (
     <div className={styles.moviesGrid}>
@@ -62,8 +95,10 @@ function onFavouriteClick(movie) {
                 />
                 <div className={styles.movieOverlay}>
                   <button
-                    className={styles.favouriteBtn}
-                      onClick={() => onFavouriteClick(movie)}
+                    className={`${styles.favouriteBtn} ${
+                      favouritedIds.includes(movie.id) ? styles.active : ""
+                    }`}
+                    onClick={() => onFavouriteClick(movie)}
                   >
                     ♥︎
                   </button>

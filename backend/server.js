@@ -28,7 +28,27 @@ app.get("/api/movies", async (req, res) => {
   }
 });
 
+app.get("/api/search", async (req, res) => {
+  const query = req.query.query;
+  const page = req.query.page || 1;
 
+  if (!query) {
+    return res.status(400).json({ error: "Missing search query" });
+  }
+
+  try {
+    const response = await fetch(
+      `${MOVIE_BASE_URL}/search/movie?api_key=${MOVIE_API_KEY}&query=${encodeURIComponent(query)}&page=${page}&include_adult=false`
+    );
+    const data = await response.json();
+
+    const filteredResults = data.results.filter((movie) => !movie.adult);
+    res.json({ ...data, results: filteredResults });
+  } catch (error) {
+    console.error("Error searching movies:", error);
+    res.status(500).json({ error: "Failed to search movies" });
+  }
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

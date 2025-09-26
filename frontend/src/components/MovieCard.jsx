@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import getMovies from "../services/cinescopeService";
+import { getMovies, searchMovies } from "../services/cinescopeService";
 import styles from "../css/MovieCard.module.css";
 
-const MovieCard = ({ searchQuery }) => {
+const MovieCard = ({ submittedQuery }) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -10,9 +10,12 @@ const MovieCard = ({ searchQuery }) => {
   const [page, setPage] = useState(1);
 
   const loadMovies = async (pageNum) => {
+    setLoading(true);
     try {
-      const allMovies = await getMovies(pageNum);
-      setMovies((prev) => [...prev, ...allMovies]);
+      const results = submittedQuery.trim()
+        ? await searchMovies(submittedQuery, pageNum)
+        : await getMovies(pageNum);
+      setMovies((prev) => [...prev, ...results]);
     } catch (err) {
       setError("Failed to load movies");
     } finally {
@@ -21,8 +24,13 @@ const MovieCard = ({ searchQuery }) => {
   };
 
   useEffect(() => {
+    setMovies([]);
+    setPage(1);
+  }, [submittedQuery]);
+
+  useEffect(() => {
     loadMovies(page);
-  }, [page]);
+  }, [page, submittedQuery]);
 
   const handleLoadMore = () => {
     setPage((prevPage) => prevPage + 1);
@@ -88,40 +96,37 @@ const MovieCard = ({ searchQuery }) => {
   }
 
   const uniqueMovies = Array.from(
-  new Map(movies.map((m) => [m.id, m])).values()
-);
+    new Map(movies.map((m) => [m.id, m])).values()
+  ).filter((movie) => movie.poster_path);
 
   return (
     <>
       <div className={styles.moviesGrid}>
-        {uniqueMovies.map(
-          (movie) =>
-            movie.title.toLowerCase().startsWith(searchQuery.toLowerCase()) && (
-              <div className={styles.movieCard} key={movie.id}>
-                <div className={styles.moviePoster}>
-                  <img
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                    alt={movie.title}
-                  />
-                  <div className={styles.movieOverlay}>
-                    <button
-                      className={`${styles.favouriteBtn} ${
-                        favouritedIds.includes(movie.id) ? styles.active : ""
-                      }`}
-                      onClick={() => onFavouriteClick(movie)}
-                    >
-                      ♥
-                    </button>
-                  </div>
-                </div>
-                <div className={styles.movieInfo}>
-                  <h3>{movie.title}</h3>
-                  <h3>{movie.release_date}</h3>
-                  <p>{movie.overview}</p>
-                </div>
+        {uniqueMovies.map((movie) => (
+          <div className={styles.movieCard} key={movie.id}>
+            <div className={styles.moviePoster}>
+              <img
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
+              />
+              <div className={styles.movieOverlay}>
+                <button
+                  className={`${styles.favouriteBtn} ${
+                    favouritedIds.includes(movie.id) ? styles.active : ""
+                  }`}
+                  onClick={() => onFavouriteClick(movie)}
+                >
+                  ♥
+                </button>
               </div>
-            )
-        )}
+            </div>
+            <div className={styles.movieInfo}>
+              <h3>{movie.title}</h3>
+              <h3>{movie.release_date}</h3>
+              <p>{movie.overview}</p>
+            </div>
+          </div>
+        ))}
         <div className={styles.loadMoreWrapper}>
           <button onClick={handleLoadMore} className={styles.loadMoreBtn}>
             Load More

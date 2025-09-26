@@ -1,15 +1,15 @@
 import { useState } from "react";
 import MovieCard from "../components/MovieCard";
 import MovieSearch from "../components/MovieSearch";
-import styles from '../css/Home.module.css';
+import styles from "../css/Home.module.css";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [submittedQuery, setSubmittedQuery] = useState("");
 
   const handleSearch = (e) => {
     e.preventDefault();
-    alert(searchQuery);
-    setSearchQuery("");
+    setSubmittedQuery(searchQuery);
   };
 
   return (
@@ -20,7 +20,7 @@ const Home = () => {
         setSearchQuery={setSearchQuery}
       />
       <div className={styles.moviesGrid}>
-        <MovieCard searchQuery={searchQuery} />
+        <MovieCard submittedQuery={submittedQuery} />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import getPopularMovies from "../services/cinescopeService";
+import getMovies from "../services/cinescopeService";
 import styles from "../css/MovieCard.module.css";
 
 const MovieCard = ({ searchQuery }) => {
@@ -7,20 +7,26 @@ const MovieCard = ({ searchQuery }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [favouritedIds, setFavouritedIds] = useState([]);
+  const [page, setPage] = useState(1);
+
+  const loadMovies = async (pageNum) => {
+    try {
+      const allMovies = await getMovies(pageNum);
+      setMovies((prev) => [...prev, ...allMovies]);
+    } catch (err) {
+      setError("Failed to load movies");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadPopularMovies = async () => {
-      try {
-        const popularMovies = await getPopularMovies();
-        setMovies(popularMovies);
-      } catch (err) {
-        setError("Failed to load movies");
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadPopularMovies();
-  }, []);
+    loadMovies(page);
+  }, [page]);
+
+  const handleLoadMore = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
 
   useEffect(() => {
     const fetchFavourites = async () => {
@@ -73,7 +79,6 @@ const MovieCard = ({ searchQuery }) => {
         .then((res) => res.json())
         .then(() => {
           setFavouritedIds([...favouritedIds, movie.id]);
-          alert(`Added "${movie.title}" to favourites!`);
         })
         .catch((err) => {
           console.error("Error saving favourite:", err);
@@ -82,37 +87,48 @@ const MovieCard = ({ searchQuery }) => {
     }
   }
 
+  const uniqueMovies = Array.from(
+  new Map(movies.map((m) => [m.id, m])).values()
+);
+
   return (
-    <div className={styles.moviesGrid}>
-      {movies.map(
-        (movie) =>
-          movie.title.toLowerCase().startsWith(searchQuery.toLowerCase()) && (
-            <div className={styles.movieCard} key={movie.id}>
-              <div className={styles.moviePoster}>
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={movie.title}
-                />
-                <div className={styles.movieOverlay}>
-                  <button
-                    className={`${styles.favouriteBtn} ${
-                      favouritedIds.includes(movie.id) ? styles.active : ""
-                    }`}
-                    onClick={() => onFavouriteClick(movie)}
-                  >
-                    ♥︎
-                  </button>
+    <>
+      <div className={styles.moviesGrid}>
+        {uniqueMovies.map(
+          (movie) =>
+            movie.title.toLowerCase().startsWith(searchQuery.toLowerCase()) && (
+              <div className={styles.movieCard} key={movie.id}>
+                <div className={styles.moviePoster}>
+                  <img
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    alt={movie.title}
+                  />
+                  <div className={styles.movieOverlay}>
+                    <button
+                      className={`${styles.favouriteBtn} ${
+                        favouritedIds.includes(movie.id) ? styles.active : ""
+                      }`}
+                      onClick={() => onFavouriteClick(movie)}
+                    >
+                      ♥
+                    </button>
+                  </div>
+                </div>
+                <div className={styles.movieInfo}>
+                  <h3>{movie.title}</h3>
+                  <h3>{movie.release_date}</h3>
+                  <p>{movie.overview}</p>
                 </div>
               </div>
-              <div className={styles.movieInfo}>
-                <h3>{movie.title}</h3>
-                <h3>{movie.release_date}</h3>
-                <p>{movie.overview}</p>
-              </div>
-            </div>
-          )
-      )}
-    </div>
+            )
+        )}
+        <div className={styles.loadMoreWrapper}>
+          <button onClick={handleLoadMore} className={styles.loadMoreBtn}>
+            Load More
+          </button>
+        </div>
+      </div>
+    </>
   );
 };
 

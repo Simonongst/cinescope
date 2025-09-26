@@ -12,17 +12,23 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/movies", async (req, res) => {
+  const page = req.query.page || 1;
   try {
     const response = await fetch(
-      `${MOVIE_BASE_URL}/movie/popular?api_key=${MOVIE_API_KEY}`
+      `${MOVIE_BASE_URL}/discover/movie?api_key=${MOVIE_API_KEY}&page=${page}&certification_country=US&certification.lte=PG-13`
     );
     const data = await response.json();
-    res.json(data);
+
+    const filteredResults = data.results.filter((movie) => !movie.adult);
+
+    res.json({ ...data, results: filteredResults });
   } catch (error) {
     console.error("Error fetching movies:", error);
     res.status(500).json({ error: "Failed to fetch movies" });
   }
 });
+
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

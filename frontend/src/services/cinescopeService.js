@@ -1,8 +1,8 @@
 const BASE_URL = "http://localhost:3000"
 
-const getPopularMovies = async () => {
+const getMovies = async (page = 1) => {
   try {
-    const response = await fetch(`${BASE_URL}/api/movies`);
+    const response = await fetch(`${BASE_URL}/api/movies?page=${page}`);
     const contentType = response.headers.get("content-type");
     if (!response.ok || !contentType.includes("application/json")) {
       throw new Error("Invalid response from server");
@@ -16,4 +16,5 @@ const getPopularMovies = async () => {
   }
 };
 
-export default getPopularMovies;
+
+export default getMovies;

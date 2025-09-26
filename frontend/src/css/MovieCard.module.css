@@ -118,6 +118,13 @@
   margin-top: auto;
 }
 
+.loadMoreWrapper {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
 @media (max-width: 768px) {
   .movieCard {
     font-size: 0.9rem;

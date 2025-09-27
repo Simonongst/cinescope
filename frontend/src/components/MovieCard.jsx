@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getMovies, searchMovies } from "../services/cinescopeService";
 import styles from "../css/MovieCard.module.css";
+import SkeletonCard from "./SkeletonCard";
 
 const MovieCard = ({ submittedQuery }) => {
   const [movies, setMovies] = useState([]);
@@ -51,7 +52,16 @@ const MovieCard = ({ submittedQuery }) => {
     fetchFavourites();
   }, []);
 
-  if (loading) return <p>Loading CineScope movies...</p>;
+  if (loading) {
+    return (
+      <div className={styles.moviesGrid}>
+        {Array.from({ length: 10 }).map((_, index) => (
+          <SkeletonCard key={index} />
+        ))}
+      </div>
+    );
+  }
+
   if (error) return <p>{error}</p>;
 
   function onFavouriteClick(movie) {

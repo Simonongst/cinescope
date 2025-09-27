@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "../css/Favourites.module.css";
+import SkeletonCard from "../components/SkeletonCard";
 
 const Favourites = () => {
   const [favourites, setFavourites] = useState([]);
@@ -21,7 +22,18 @@ const Favourites = () => {
     fetchFavourites();
   }, []);
 
-  if (loading) return <p>Loading favourites...</p>;
+  if (loading) {
+    return (
+      <div className={styles.favourites}>
+        <h2>Your Favourite Movies</h2>
+        <div className={styles.moviesGrid}>
+          {Array.from({ length: favourites.length || 10 }).map((_, index) => (
+            <SkeletonCard key={index} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   if (favourites.length === 0) {
     return (

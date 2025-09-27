@@ -57,7 +57,7 @@ const Favourites = () => {
       <h2>Your Favourite Movies</h2>
       <div className={styles.moviesGrid}>
         {favourites.map((record) => {
-          const fields = record; // fields are flattened in backend
+          const fields = record;
           if (!fields || !fields["Poster URL"]) return null;
 
           return (

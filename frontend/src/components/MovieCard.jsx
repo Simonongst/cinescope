@@ -64,11 +64,9 @@ const MovieCard = ({ submittedQuery }) => {
         .then((res) => res.json())
         .then(() => {
           setFavouritedIds(favouritedIds.filter((id) => id !== movie.id));
-          alert(`Removed "${movie.title}" from favourites.`);
         })
         .catch((err) => {
           console.error("Error removing favourite:", err);
-          alert("Failed to remove favourite.");
         });
     } else {
       fetch("http://localhost:3000/api/favourites", {
@@ -90,7 +88,6 @@ const MovieCard = ({ submittedQuery }) => {
         })
         .catch((err) => {
           console.error("Error saving favourite:", err);
-          alert("Failed to save favourite.");
         });
     }
   }
@@ -115,6 +112,7 @@ const MovieCard = ({ submittedQuery }) => {
                     favouritedIds.includes(movie.id) ? styles.active : ""
                   }`}
                   onClick={() => onFavouriteClick(movie)}
+                  disabled={favouritedIds.includes(movie.id)}
                 >
                   ♥
                 </button>

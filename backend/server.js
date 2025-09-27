@@ -13,14 +13,16 @@ app.get("/", (req, res) => {
 
 app.get("/api/movies", async (req, res) => {
   const page = req.query.page || 1;
+  const genreIds = req.query.with_genres || ""; // comma-separated string
+
+  const genreParam = genreIds ? `&with_genres=${genreIds}` : "";
+
   try {
     const response = await fetch(
-      `${MOVIE_BASE_URL}/discover/movie?api_key=${MOVIE_API_KEY}&page=${page}&certification_country=US&certification.lte=PG-13`
+      `${MOVIE_BASE_URL}/discover/movie?api_key=${MOVIE_API_KEY}&page=${page}${genreParam}&certification_country=US&certification.lte=PG-13`
     );
     const data = await response.json();
-
     const filteredResults = data.results.filter((movie) => !movie.adult);
-
     res.json({ ...data, results: filteredResults });
   } catch (error) {
     console.error("Error fetching movies:", error);
@@ -47,6 +49,19 @@ app.get("/api/search", async (req, res) => {
   } catch (error) {
     console.error("Error searching movies:", error);
     res.status(500).json({ error: "Failed to search movies" });
+  }
+});
+
+app.get("/api/genres", async (req, res) => {
+  try {
+    const response = await fetch(
+      `${MOVIE_BASE_URL}/genre/movie/list?api_key=${MOVIE_API_KEY}&language=en`
+    );
+    const data = await response.json();
+    res.status(200).json(data.genres);
+  } catch (error) {
+    console.error("Error fetching genres:", error);
+    res.status(500).json({ error: "Failed to fetch genres" });
   }
 });
 

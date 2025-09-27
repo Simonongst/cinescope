@@ -5,17 +5,22 @@ import SkeletonCard from "../components/SkeletonCard";
 const Favourites = () => {
   const [favourites, setFavourites] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [skeletonCount, setSkeletonCount] = useState(0); // Start with 0, no default
 
   useEffect(() => {
     const fetchFavourites = async () => {
       try {
         const response = await fetch("http://localhost:3000/api/favourites");
         const data = await response.json();
+        setSkeletonCount(data.length); // Set skeleton count based on actual data
         setFavourites(data);
       } catch (err) {
         console.error("Error loading favourites:", err);
+        setSkeletonCount(0); // Show no skeletons if there's an error
       } finally {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 300); // Optional delay for smoother skeleton transition
       }
     };
 
@@ -27,7 +32,7 @@ const Favourites = () => {
       <div className={styles.favourites}>
         <h2>Your Favourite Movies</h2>
         <div className={styles.moviesGrid}>
-          {Array.from({ length: favourites.length || 10 }).map((_, index) => (
+          {Array.from({ length: skeletonCount }).map((_, index) => (
             <SkeletonCard key={index} />
           ))}
         </div>

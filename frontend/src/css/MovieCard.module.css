@@ -3,6 +3,8 @@
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1.5rem;
   padding: 1rem;
+  min-height: 100vh;
+  overflow-anchor: auto;
 }
 
 .movieCard {
@@ -123,6 +125,48 @@
   display: flex;
   justify-content: center;
   margin-top: 2rem;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 2rem;
+  color: #ccc;
+  font-size: 1rem;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+.scrollTopBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  backdrop-filter: blur(6px);
+  background-color: rgba(255, 255, 255, 0.1); /* faint glow */
+  color: white;
+  border: none;
+  width: 48px;
+  height: 48px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scrollTopBtn.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.scrollTopBtn:hover {
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
 }
 
 @media (max-width: 768px) {

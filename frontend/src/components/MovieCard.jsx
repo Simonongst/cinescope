@@ -3,19 +3,33 @@ import { getMovies, searchMovies } from "../services/cinescopeService";
 import styles from "../css/MovieCard.module.css";
 import SkeletonCard from "./SkeletonCard";
 
-const MovieCard = ({ submittedQuery }) => {
+const MovieCard = ({ submittedQuery, selectedGenres }) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [favouritedIds, setFavouritedIds] = useState([]);
   const [page, setPage] = useState(1);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const loadMovies = async (pageNum) => {
     setLoading(true);
     try {
       const results = submittedQuery.trim()
-        ? await searchMovies(submittedQuery, pageNum)
-        : await getMovies(pageNum);
+        ? await searchMovies(submittedQuery, pageNum, selectedGenres)
+        : await getMovies(pageNum, selectedGenres);
+
       setMovies((prev) => [...prev, ...results]);
     } catch (err) {
       setError("Failed to load movies");
@@ -27,7 +41,8 @@ const MovieCard = ({ submittedQuery }) => {
   useEffect(() => {
     setMovies([]);
     setPage(1);
-  }, [submittedQuery]);
+    loadMovies(1);
+  }, [submittedQuery, selectedGenres]);
 
   useEffect(() => {
     loadMovies(page);
@@ -106,6 +121,14 @@ const MovieCard = ({ submittedQuery }) => {
     new Map(movies.map((m) => [m.id, m])).values()
   ).filter((movie) => movie.poster_path);
 
+  if (!loading && uniqueMovies.length === 0) {
+    return (
+      <div className={styles.emptyState}>
+        <p>No movies found for the selected genres or search query.</p>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className={styles.moviesGrid}>
@@ -141,6 +164,14 @@ const MovieCard = ({ submittedQuery }) => {
           </button>
         </div>
       </div>
+      {showScrollTop && (
+        <button
+          className={`${styles.scrollTopBtn} ${styles.show}`}
+          onClick={scrollToTop}
+        >
+          ⇧
+        </button>
+      )}
     </>
   );
 };

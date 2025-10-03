@@ -4,13 +4,13 @@
 
 ## Screenshot: Home Page
 
-<img src="https://github.com/Simonongst/number-guessing/blob/main/assets/NumberGuessing-WelcomeScreen.png" width="300">
+<img src="https://github.com/Simonongst/Simonongst/cinescope/refs/heads/main/frontend/src/assets/CineScope-HomePage.png" width="600">
 
 <br/>
 
-## Screenshot: GamePlay Screen
+## Screenshot: Favourite Page
 
-<img src="https://github.com/Simonongst/number-guessing/blob/main/assets/numberGuessing-GameplayScreen.png" width="300">
+<img src="https://github.com/Simonongst/cinescope/blob/main/frontend/src/assets/CineScope-FavouritePage.png" width="600">
 
 <br/>
 

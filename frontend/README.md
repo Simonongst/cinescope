@@ -46,7 +46,7 @@ _Planning materials:_ [Planning Materials]
 <br/>
 
 ## Project Structure
-
+```
 src/
 ├── components/                  
 │   ├── FavouritesCard.jsx       # Renders saved favourites with delete (✕) functionality
@@ -76,7 +76,7 @@ src/
 ├── App.module.css               # Layout styles for main content container
 ├── index.css                    # Global styles
 ├── main.jsx                     # Application entry point
-
+```
 <br/>
 
 ## Technologies Used

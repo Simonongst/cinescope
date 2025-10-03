@@ -1,6 +1,8 @@
 import styles from "../css/MovieSearch.module.css";
 
 const MovieSearch = ({ handleSearch, searchQuery, setSearchQuery }) => {
+  
+  // Clear search input
   const handleClear = () => {
     setSearchQuery("");
   };

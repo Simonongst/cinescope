@@ -5,6 +5,7 @@ import styles from "../css/GenreFilter.module.css";
 const GenreFilter = ({ selectedGenres, setSelectedGenres }) => {
   const [genres, setGenres] = useState([]);
 
+  // Fetch genres from TMDB
   useEffect(() => {
     const fetchGenres = async () => {
       try {
@@ -18,6 +19,7 @@ const GenreFilter = ({ selectedGenres, setSelectedGenres }) => {
     fetchGenres();
   }, []);
 
+  // Toggle genre selection
   const toggleGenre = (id) => {
     setSelectedGenres((prev) =>
       prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]

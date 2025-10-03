@@ -30,9 +30,8 @@ CineScope was my way of practicing how to work with external APIs. Using TMDB to
 
 ## Getting Started
 
-_Launch the app:_ [CineScope]()
+_Launch the app:_ [CineScope GitHub Repository](https://github.com/Simonongst/cinescope)
 <br/>
-_Planning materials:_ [Planning Materials]
 
 ### How to Use:
 
@@ -94,7 +93,7 @@ src/
 
 ## Attributions
 
-- Movie data provided by [TMDb](https://www.themoviedb.org)
+- Movie data provided by [TMDB](https://www.themoviedb.org)
 - Favourites stored via [Airtable](https://airtable.com)
 
 <br/>

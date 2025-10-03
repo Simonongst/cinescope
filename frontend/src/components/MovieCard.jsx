@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMovies, searchMovies } from "../services/cinescopeService";
+import { getMovies, searchMovies, getFavourites, addFavourite } from "../services/cinescopeService";
 import styles from "../css/MovieCard.module.css";
 import SkeletonCard from "./SkeletonCard";
 
@@ -54,16 +54,13 @@ const MovieCard = ({ submittedQuery, selectedGenres }) => {
   useEffect(() => {
     const fetchFavourites = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/favourites");
-        const data = await response.json();
-        const ids = data.map((fav) => fav["Movie ID"]);
-        setFavouritedIds(ids);
+      const ids = await getFavourites();
+      setFavouritedIds(ids);
       } catch (err) {
-        console.error("Error loading favourites:", err);
+        console.error("Error loading favourites:", err)
       }
     };
-
-    fetchFavourites();
+      fetchFavourites();
   }, []);
 
   // Show loading skeletons
@@ -81,28 +78,16 @@ const MovieCard = ({ submittedQuery, selectedGenres }) => {
   if (error) return <p>{error}</p>;
 
   // Add movie to favourites in Airtable, disable button if already favourited
-  function onFavouriteClick(movie) {
-      fetch("http://localhost:3000/api/favourites", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          movieId: movie.id,
-          title: movie.title,
-          posterUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-          releaseDate: movie.release_date,
-          overview: movie.overview,
-        }),
-      })
-        .then((res) => res.json())
-        .then(() => {
-          setFavouritedIds([...favouritedIds, movie.id]);
-        })
-        .catch((err) => {
-          console.error("Error saving favourite:", err);
-        });
+  const onFavouriteClick = async (movie) => {
+    try {
+    const result = await addFavourite(movie);
+    if(result){
+      setFavouritedIds([...favouritedIds, movie.id]);
+      }
+    } catch (err) {
+      console.error("Error adding favourite:", err);
     }
+    };
 
   // Remove duplicate movies and filter out those without posters
   const uniqueMovies = Array.from(

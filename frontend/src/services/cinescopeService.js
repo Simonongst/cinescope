@@ -53,3 +53,40 @@ export const getGenres = async () => {
     return [];
   }
 };
+
+export const getFavourites = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/favourites`);
+    const contentType = response.headers.get("content-type");
+    if (!response.ok || !contentType.includes("application/json")) {
+      throw new Error("Invalid response from server");
+    }
+    const data = await response.json();
+    return data.map((fav) => fav["Movie ID"]);
+  } catch (error) {
+    console.error("Error loading favourites:", error);
+    return [];
+  }
+};
+
+export const addFavourite = async (movie) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/favourites`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+          movieId: movie.id,
+          title: movie.title,
+          posterUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+          releaseDate: movie.release_date,
+          overview: movie.overview,
+        }),
+      });
+      return await response.json();
+    } catch (error) {
+      console.error("Error saving favourite:", error);
+      return null;
+    }
+};

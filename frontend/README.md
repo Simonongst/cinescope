@@ -14,48 +14,88 @@
 
 <br/>
 
-## Game Overview
+## CineScope Overview
 
-**Number Guessing Game** is a multi-row interactive challenge where players attempt to guess the secret number within a limited number of tries.
-Each guess provides color-coded feedback indicating whether your guesses are correct, misplaced, or incorrect.
+**CineScope** is a full-stack movie discovery app where users can search for films, filter by genre, and save favourites using Airtable as a backend. It features a cinematic UI with skeleton loading, scroll-to-top behavior, and graceful empty state handling.
 
-### The game emphasizes:
+### The App Emphasizes:
 
-- Accessibility: Clear visual cues and timed messages.
-- User Experience: Smooth input handling and restart flow.
-- Validation: Prevents empty, invalid, or out-of-range entries.
+- Accessibility: Clear genre filters and responsive design.
+- User Experience: Smooth search, pagination, and feedback states.
+- Modularity: Reusable components and scalable architecture.
 
-I chose this project to explore modular game logic, dynamic UI updates, and intuitive feedback systems as well as keeping the experience beginner-friendly and engaging.
+CineScope was my way of practicing how to work with external APIs. Using TMDB to get movie data and Airtable to store favourites. It taught me how to handle responses, errors, and how to structure my code so it’s easy to update later.
 
 <br/>
 
 ## Getting Started
 
-_Play the game here:_ [Number Guessing](https://simonongst.github.io/number-guessing/)
+_Launch the app:_ [CineScope]()
 <br/>
-_Planning materials:_ [Planning Materials](https://github.com/Simonongst/number-guessing/blob/main/Planning-Materials.pdf)
+_Planning materials:_ [Planning Materials]
 
-### How to Play:
+### How to Use:
 
-1. Input a number between 0-9 in each box.
+1. Search for movies by title using the search bar.
+2. Filter movies by selecting one or more genres.
+3. Click the ♥ icon to save a movie to your favourites.
+4. Click on load more to show more movies or use the scroll-to-top button to quickly return to the top.
+5. View saved favourites on the dedicated favourite page.
+6. Click the ✕ icon to unfavourite a movie from your favourites.
 
-2. Click on **'Check'** button to see the feedback colors.
+<br/>
 
-   - 🟩 Correct input in correct position
-   - 🟧 Correct input in wrong position
-   - 🟥 Incorrect input
+## Project Structure
 
-3. Win by guessing the number within the allowed attempts.
-   
-4. Replay and see if you can beat your time!
+src/
+├── components/                  
+│   ├── FavouritesCard.jsx       # Renders saved favourites with delete (✕) functionality
+│   ├── GenreFilter.jsx          # Genre selection UI with toggle and clear filters
+│   ├── MovieCard.jsx            # Displays movie results with poster, info, and ♥ button
+│   ├── MovieSearch.jsx          # Search bar with input and clear button
+│   ├── NavBar.jsx               # Top navigation with links to Home and Favourites
+│   └── SkeletonCard.jsx         # Loading placeholder for movie cards
+│
+├── pages/                       
+│   ├── Favourites.jsx           # Page showing user's saved favourites
+│   └── Home.jsx                 # Main page with search, filter, and movie results
+│
+├── services/                    
+│   └── cinescopeService.js      # Handles TMDB and Airtable API calls
+│
+├── css/                         # Scoped styles for components and pages
+│   ├── FavouriteCard.module.css
+│   ├── Favourites.module.css
+│   ├── GenreFilter.module.css
+│   ├── Home.module.css
+│   ├── MovieCard.module.css
+│   ├── MovieSearch.module.css
+│   └── NavBar.module.css
+│
+├── App.jsx                      # Root component
+├── App.module.css               # Layout styles for main content container
+├── index.css                    # Global styles
+├── main.jsx                     # Application entry point
 
 <br/>
 
 ## Technologies Used
 
 - JavaScript
-- HTML
-- CSS
+- React
+- Express
+- Node.js
+- CSS Modules
+- Airtable API
+- TMDB API
+- react-loading-skeleton
+
+<br/>
+
+## Attributions
+
+- Movie data provided by [TMDb](https://www.themoviedb.org)
+- Favourites stored via [Airtable](https://airtable.com)
 
 <br/>
 
@@ -63,6 +103,9 @@ _Planning materials:_ [Planning Materials](https://github.com/Simonongst/number-
 
 Planned enhancements:
 
-- Sound and visual effects for feedback
-- Difficulty levels
-- Each input automatically advances to the next field
+- Display movie ratings for better viewer insight
+- Show casting details including lead actors and directors
+- Search by actor/actress to explore their filmography
+- Highlight trending movies based on popularity metrics
+- Show Top 10 movies by genre or global ranking
+- Show platform availability (e.g. Netflix, Disney+)

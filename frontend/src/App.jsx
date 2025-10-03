@@ -13,6 +13,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/favourites' element={<Favourites />} />
+          <Route path='*' element={<h1>Oops! We couldn't find that page</h1>} />
         </Routes>
       </main>
     </div>

@@ -103,16 +103,6 @@
   color: #ff4757;
 }
 
-.ratingSelect {
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  border: none;
-  padding: 0.5rem;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 0.5rem;
-}
-
 .movieInfo {
   padding: 1rem;
   flex: 1;
@@ -129,12 +119,6 @@
 .movieInfo p {
   color: #999;
   font-size: 0.9rem;
-}
-
-.userRating {
-  color: #ffd700;
-  font-size: 0.9rem;
-  margin-top: auto;
 }
 
 @media (max-width: 768px) {

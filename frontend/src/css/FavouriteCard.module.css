@@ -1,3 +1,8 @@
+.emptyStateWrapper {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
 .favouritesEmpty {
   text-align: center;
   padding: 4rem 2rem;

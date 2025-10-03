@@ -1,9 +1,11 @@
-const BASE_URL = "http://localhost:3000"
+const BASE_URL = "http://localhost:3000";
 
 export const getMovies = async (page = 1, genres = []) => {
   const genreParam = genres.length ? `&with_genres=${genres.join(",")}` : "";
   try {
-    const response = await fetch(`${BASE_URL}/api/movies?page=${page}${genreParam}`);
+    const response = await fetch(
+      `${BASE_URL}/api/movies?page=${page}${genreParam}`
+    );
     const contentType = response.headers.get("content-type");
     if (!response.ok || !contentType.includes("application/json")) {
       throw new Error("Invalid response from server");
@@ -19,7 +21,11 @@ export const getMovies = async (page = 1, genres = []) => {
 export const searchMovies = async (query, page = 1, genres = []) => {
   const genreParam = genres.length ? `&with_genres=${genres.join(",")}` : "";
   try {
-    const response = await fetch(`${BASE_URL}/api/search?query=${encodeURIComponent(query)}&page=${page}${genreParam}`);
+    const response = await fetch(
+      `${BASE_URL}/api/search?query=${encodeURIComponent(
+        query
+      )}&page=${page}${genreParam}`
+    );
     const contentType = response.headers.get("content-type");
     if (!response.ok || !contentType.includes("application/json")) {
       throw new Error("Invalid response from server");
@@ -47,4 +53,3 @@ export const getGenres = async () => {
     return [];
   }
 };
-

@@ -59,9 +59,11 @@ const FavouritesCard = () => {
 
   if (favourites.length === 0) {
     return (
-      <div className={styles.favouritesEmpty}>
-        <h2>No Favourite Movies Yet</h2>
-        <p>Add your favourite movies here!</p>
+      <div className={styles.emptyStateWrapper}>
+        <div className={styles.favouritesEmpty}>
+          <h2>No Favourite Movies Yet</h2>
+          <p>Add your favourite movies here!</p>
+        </div>
       </div>
     );
   }

@@ -57,10 +57,6 @@
   padding: 1rem;
 }
 
-.movieCard:hover .movieOverlay {
-  opacity: 1;
-}
-
 .favouriteBtn {
   position: absolute;
   top: 1rem;

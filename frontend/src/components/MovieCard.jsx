@@ -39,14 +39,10 @@ const MovieCard = ({ submittedQuery, selectedGenres }) => {
   };
 
   useEffect(() => {
-    setMovies([]);
-    setPage(1);
-    loadMovies(1);
-  }, [submittedQuery, selectedGenres]);
-
-  useEffect(() => {
+    const initialLoad = page === 1;
+    if (initialLoad) setMovies([]);
     loadMovies(page);
-  }, [page, submittedQuery]);
+  }, [page, submittedQuery, selectedGenres]);
 
   const handleLoadMore = () => {
     setPage((prevPage) => prevPage + 1);

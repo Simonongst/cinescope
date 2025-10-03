@@ -11,18 +11,7 @@ const MovieCard = ({ submittedQuery, selectedGenres }) => {
   const [page, setPage] = useState(1);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
+  // Fetch movies from TMDB
   const loadMovies = async (pageNum) => {
     setLoading(true);
     try {
@@ -38,6 +27,7 @@ const MovieCard = ({ submittedQuery, selectedGenres }) => {
     }
   };
 
+  // Fetch movies when page, query, or genres change
   useEffect(() => {
     const initialLoad = page === 1;
     if (initialLoad) setMovies([]);
@@ -48,6 +38,19 @@ const MovieCard = ({ submittedQuery, selectedGenres }) => {
     setPage((prevPage) => prevPage + 1);
   };
 
+    useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Fetch favourited movie IDs from Airtable
   useEffect(() => {
     const fetchFavourites = async () => {
       try {
@@ -63,6 +66,7 @@ const MovieCard = ({ submittedQuery, selectedGenres }) => {
     fetchFavourites();
   }, []);
 
+  // Show loading skeletons
   if (loading) {
     return (
       <div className={styles.moviesGrid}>
@@ -73,23 +77,11 @@ const MovieCard = ({ submittedQuery, selectedGenres }) => {
     );
   }
 
+  // Show error message if fetch fails
   if (error) return <p>{error}</p>;
 
+  // Add movie to favourites in Airtable, disable button if already favourited
   function onFavouriteClick(movie) {
-    const isFavourited = favouritedIds.includes(movie.id);
-
-    if (isFavourited) {
-      fetch(`http://localhost:3000/api/favourites/${movie.id}`, {
-        method: "DELETE",
-      })
-        .then((res) => res.json())
-        .then(() => {
-          setFavouritedIds(favouritedIds.filter((id) => id !== movie.id));
-        })
-        .catch((err) => {
-          console.error("Error removing favourite:", err);
-        });
-    } else {
       fetch("http://localhost:3000/api/favourites", {
         method: "POST",
         headers: {
@@ -111,12 +103,13 @@ const MovieCard = ({ submittedQuery, selectedGenres }) => {
           console.error("Error saving favourite:", err);
         });
     }
-  }
 
+  // Remove duplicate movies and filter out those without posters
   const uniqueMovies = Array.from(
     new Map(movies.map((m) => [m.id, m])).values()
   ).filter((movie) => movie.poster_path);
 
+  // Empty state if no results found
   if (!loading && uniqueMovies.length === 0) {
     return (
       <div className={styles.emptyState}>
@@ -140,7 +133,7 @@ const MovieCard = ({ submittedQuery, selectedGenres }) => {
                   className={`${styles.favouriteBtn} ${
                     favouritedIds.includes(movie.id) ? styles.active : ""
                   }`}
-                  onClick={() => onFavouriteClick(movie)}
+                  onClick={() => !favouritedIds.includes(movie.id) && onFavouriteClick(movie)}
                   disabled={favouritedIds.includes(movie.id)}
                 >
                   ♥

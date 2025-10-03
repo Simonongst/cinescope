@@ -47,7 +47,7 @@ export const getGenres = async () => {
     }
 
     const data = await response.json();
-    return data; // Already an array of genres
+    return data;
   } catch (error) {
     console.error("Genre Fetch Error:", error);
     return [];

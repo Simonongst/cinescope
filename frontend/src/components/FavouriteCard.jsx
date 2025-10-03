@@ -7,6 +7,7 @@ const FavouritesCard = () => {
   const [loading, setLoading] = useState(true);
   const [skeletonCount, setSkeletonCount] = useState(0);
 
+  // Fetch favourited movies from Airtable
   useEffect(() => {
     const fetchFavourites = async () => {
       try {
@@ -25,6 +26,7 @@ const FavouritesCard = () => {
     fetchFavourites();
   }, []);
 
+  // Delete a favourite movie
   const handleDelete = async (movieId) => {
     try {
       const response = await fetch(
@@ -47,6 +49,7 @@ const FavouritesCard = () => {
     }
   };
 
+  // Show loading skeletons
   if (loading) {
     return (
       <>
@@ -57,6 +60,7 @@ const FavouritesCard = () => {
     );
   }
 
+  // Empty state if no favourites
   if (favourites.length === 0) {
     return (
       <div className={styles.emptyStateWrapper}>

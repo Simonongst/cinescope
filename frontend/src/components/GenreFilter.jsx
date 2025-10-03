@@ -7,8 +7,13 @@ const GenreFilter = ({ selectedGenres, setSelectedGenres }) => {
 
   useEffect(() => {
     const fetchGenres = async () => {
+      try {
       const genreList = await getGenres();
       setGenres(genreList);
+      } catch (err) {
+        console.error("Error fetching genres:", err);
+        setGenres([]);
+      }
     };
     fetchGenres();
   }, []);

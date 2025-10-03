@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "../css/FavouriteCard.module.css";
+import { fetchAllFavourites, deleteFavourite } from "../services/cinescopeService";
 import SkeletonCard from "./SkeletonCard";
 
 const FavouritesCard = () => {
@@ -11,32 +12,23 @@ const FavouritesCard = () => {
   useEffect(() => {
     const fetchFavourites = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/favourites");
-        const data = await response.json();
+        const data = await fetchAllFavourites();
         setSkeletonCount(data.length);
         setFavourites(data);
       } catch (err) {
-        console.error("Error loading favourites:", err);
+        console.error("Error fetching favourites:", err);
         setSkeletonCount(0);
       } finally {
         setTimeout(() => setLoading(false), 300);
       }
     };
-
-    fetchFavourites();
-  }, []);
+        fetchFavourites();
+    }, []);
 
   // Delete a favourite movie
   const handleDelete = async (movieId) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/favourites/${movieId}`,
-        {
-          method: "DELETE",
-        }
-      );
-      const result = await response.json();
-
+      const result = await deleteFavourite(movieId);
       if (result.success) {
         setFavourites((prev) =>
           prev.filter((fav) => fav["Movie ID"] !== movieId)
